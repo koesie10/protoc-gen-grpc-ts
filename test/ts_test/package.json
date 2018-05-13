@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "generate": "./generate.sh",
+    "generate": "node generate.js",
     "build": "npm run generate && rm -rf ./build && tsc",
     "test": "mocha --require source-map-support/register ./build/src/*.js ./build/src/**/*.js"
   }

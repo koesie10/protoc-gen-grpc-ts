@@ -1,7 +1,7 @@
 {
-  "name": "ts-protoc-gen",
-  "version": "0.6.0",
-  "description": "Protoc Plugin for TypeScript Declarations and Service Definitions",
+  "name": "protoc-gen-grpc-ts",
+  "version": "0.1.0",
+  "description": "Protoc Plugin for TypeScript Declarations for gRPC",
   "scripts": {
     "lint": "tslint src/**/*.ts && (cd test && npm run lint)",
     "lint:fix": "npm run lint -- --fix && (cd test && npm run lint:fix)",
@@ -11,9 +11,9 @@
     "prepublishOnly": "npm run build"
   },
   "bin": {
-    "protoc-gen-ts": "bin/protoc-gen-ts"
+    "protoc-gen-grpc-ts": "bin/protoc-gen-grpc-ts"
   },
-  "repository": "https://github.com/improbable-eng/ts-protoc-gen",
+  "repository": "https://github.com/koesie10/protoc-gen-grpc-ts",
   "keywords": [
     "protobuf",
     "protoc",
@@ -23,7 +23,7 @@
     "service",
     "proto3"
   ],
-  "author": "Improbable",
+  "contributors": ["Improbable", "Koen Vlaswinkel"],
   "license": "Apache-2.0",
   "dependencies": {
     "google-protobuf": "^3.5.0"
@@ -34,16 +34,17 @@
     "@types/lodash": "^4.14.106",
     "@types/mocha": "^2.2.46",
     "@types/node": "^7.0.52",
-    "@types/text-encoding": "0.0.32",
+    "@types/protobufjs": "^6.0.0",
     "babel": "^6.5.2",
     "chai": "^3.5.0",
+    "grpc": "^1.11.3",
     "grpc-tools": "^1.6.6",
-    "grpc-web-client": "^0.5.0",
     "lodash": "^4.17.5",
     "lodash.isequal": "^4.5.0",
     "mocha": "^3.5.3",
+    "rimraf": "^2.6.2",
     "source-map-support": "^0.4.18",
-    "text-encoding": "^0.6.4",
+    "ts-protoc-gen": "^0.6.0",
     "tslint": "^5.9.1",
     "typescript": "^2.7.2"
   }

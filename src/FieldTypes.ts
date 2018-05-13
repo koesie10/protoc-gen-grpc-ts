@@ -1,12 +1,12 @@
-import {filePathToPseudoNamespace, withinNamespaceFromExportEntry} from "../util";
-import {ExportMap} from "../ExportMap";
+import {filePathToPseudoNamespace, withinNamespaceFromExportEntry} from "./util";
+import {ExportMap} from "./ExportMap";
 import {FieldDescriptorProto} from "google-protobuf/google/protobuf/descriptor_pb";
 
 export const MESSAGE_TYPE = 11;
 export const BYTES_TYPE = 12;
 export const ENUM_TYPE = 14;
 
-const TypeNumToTypeString: {[key: number]: string} = {};
+const TypeNumToTypeString: { [key: number]: string } = {};
 TypeNumToTypeString[1] = "number"; // TYPE_DOUBLE
 TypeNumToTypeString[2] = "number"; // TYPE_FLOAT
 TypeNumToTypeString[3] = "number"; // TYPE_INT64
@@ -26,34 +26,30 @@ TypeNumToTypeString[16] = "number"; // TYPE_SFIXED64
 TypeNumToTypeString[17] = "number"; // TYPE_SINT32 - Uses ZigZag encoding.
 TypeNumToTypeString[18] = "number"; // TYPE_SINT64 - Uses ZigZag encoding.
 
-export function getTypeName(fieldTypeNum: number): string {
-  return TypeNumToTypeString[fieldTypeNum];
-}
-
 export function getFieldType(type: FieldDescriptorProto.Type, typeName: string, currentFileName: string, exportMap: ExportMap): string {
-  if (type === MESSAGE_TYPE) {
-    const fromExport = exportMap.getMessage(typeName);
-    if (!fromExport) {
-      throw new Error("Could not getFieldType for message: " + typeName);
-    }
-    const withinNamespace = withinNamespaceFromExportEntry(typeName, fromExport);
-    if (fromExport.fileName === currentFileName) {
-      return withinNamespace;
+    if (type === MESSAGE_TYPE) {
+        const fromExport = exportMap.getMessage(typeName);
+        if (!fromExport) {
+            throw new Error("Could not getFieldType for message: " + typeName);
+        }
+        const withinNamespace = withinNamespaceFromExportEntry(typeName, fromExport);
+        if (fromExport.fileName === currentFileName) {
+            return withinNamespace;
+        } else {
+            return filePathToPseudoNamespace(fromExport.fileName) + "." + withinNamespace;
+        }
+    } else if (type === ENUM_TYPE) {
+        const fromExport = exportMap.getEnum(typeName);
+        if (!fromExport) {
+            throw new Error("Could not getFieldType for enum: " + typeName);
+        }
+        const withinNamespace = withinNamespaceFromExportEntry(typeName, fromExport);
+        if (fromExport.fileName === currentFileName) {
+            return withinNamespace;
+        } else {
+            return filePathToPseudoNamespace(fromExport.fileName) + "." + withinNamespace;
+        }
     } else {
-      return filePathToPseudoNamespace(fromExport.fileName) + "." + withinNamespace;
+        return TypeNumToTypeString[type];
     }
-  } else if (type === ENUM_TYPE) {
-    const fromExport = exportMap.getEnum(typeName);
-    if (!fromExport) {
-      throw new Error("Could not getFieldType for enum: " + typeName);
-    }
-    const withinNamespace = withinNamespaceFromExportEntry(typeName, fromExport);
-    if (fromExport.fileName === currentFileName) {
-      return withinNamespace;
-    } else {
-      return filePathToPseudoNamespace(fromExport.fileName) + "." + withinNamespace;
-    }
-  } else {
-    return TypeNumToTypeString[type];
-  }
 }
