@@ -1,6 +1,6 @@
 {
   "name": "ts-grpc-protoc-gen",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Protoc Plugin for TypeScript Declarations for gRPC",
   "scripts": {
     "lint": "tslint src/**/*.ts && (cd test && npm run lint)",
@@ -23,7 +23,10 @@
     "service",
     "proto3"
   ],
-  "contributors": ["Improbable", "Koen Vlaswinkel"],
+  "contributors": [
+    "Improbable",
+    "Koen Vlaswinkel"
+  ],
   "license": "Apache-2.0",
   "dependencies": {
     "google-protobuf": "^3.5.0"
