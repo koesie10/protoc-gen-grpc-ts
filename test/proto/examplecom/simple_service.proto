@@ -18,5 +18,7 @@ message StreamRequest {
 
 service SimpleService {
   rpc DoUnary(UnaryRequest) returns (othercom.ExternalChildMessage) {}
-  rpc DoStream(StreamRequest) returns (stream othercom.ExternalChildMessage) {}
+  rpc DoServerStream(StreamRequest) returns (stream othercom.ExternalChildMessage) {}
+  rpc DoClientStream(stream StreamRequest) returns (othercom.ExternalChildMessage) {}
+  rpc DoBiStream(stream StreamRequest) returns (stream othercom.ExternalChildMessage) {}
 }

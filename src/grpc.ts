@@ -49,11 +49,11 @@ export function printFileDescriptorTSGRPC(fileDescriptor: FileDescriptorProto, e
         const methodImplsPrinter = new Printer(1);
         methodImplsPrinter.printLn(`interface MethodImpls {`);
 
-        const clientClassName = `${service.getName()}ClientClass`;
+        const clientClassName = `${service.getName()}Client`;
         const clientClassPrinter = new Printer(1);
         clientClassPrinter.printLn(`class ${clientClassName} extends GRPC.Client {`);
 
-        const serviceInterfaceName = `I${service.getName()}Service`;
+        const serviceInterfaceName = `${service.getName()}Service`;
         const servicePrinter = new Printer(1);
         servicePrinter.printLn(
             `interface ${serviceInterfaceName} extends GRPC.ServiceDefinition<MethodImpls> {`);
@@ -74,6 +74,19 @@ export function printFileDescriptorTSGRPC(fileDescriptor: FileDescriptorProto, e
                     `${grpcMethodName}(` +
                     `request: ${requestMessageTypeName}, ` +
                     `options: Partial<GRPC.CallOptions>, ` +
+                    `metadata: GRPC.Metadata, ` +
+                    `callback: GRPC.requestCallback<${responseMessageTypeName}>` +
+                    `): GRPC.ClientUnaryCall;`);
+                clientClassPrinter.printIndentedLn(
+                    `${grpcMethodName}(` +
+                    `request: ${requestMessageTypeName}, ` +
+                    `options: Partial<GRPC.CallOptions>, ` +
+                    `callback: GRPC.requestCallback<${responseMessageTypeName}>` +
+                    `): GRPC.ClientUnaryCall;`);
+                clientClassPrinter.printIndentedLn(
+                    `${grpcMethodName}(` +
+                    `request: ${requestMessageTypeName}, ` +
+                    `metadata: GRPC.Metadata, ` +
                     `callback: GRPC.requestCallback<${responseMessageTypeName}>` +
                     `): GRPC.ClientUnaryCall;`);
                 clientClassPrinter.printIndentedLn(
@@ -87,12 +100,23 @@ export function printFileDescriptorTSGRPC(fileDescriptor: FileDescriptorProto, e
                 methodImplsPrinter.printIndentedLn(`${grpcMethodName}: MethodImplTypes.${grpcMethodName};`);
                 clientClassPrinter.printIndentedLn(
                     `${grpcMethodName}(` +
-                    `request: ${requestMessageTypeName}` +
+                    `request: ${requestMessageTypeName}, ` +
+                    `metadata: GRPC.Metadata, ` +
+                    `options: Partial<GRPC.CallOptions>` +
                     `): GRPC.ClientReadableStream<${responseMessageTypeName}>;`);
                 clientClassPrinter.printIndentedLn(
                     `${grpcMethodName}(` +
                     `request: ${requestMessageTypeName}, ` +
                     `options: Partial<GRPC.CallOptions>` +
+                    `): GRPC.ClientReadableStream<${responseMessageTypeName}>;`);
+                clientClassPrinter.printIndentedLn(
+                    `${grpcMethodName}(` +
+                    `request: ${requestMessageTypeName}, ` +
+                    `metadata: GRPC.Metadata ` +
+                    `): GRPC.ClientReadableStream<${responseMessageTypeName}>;`);
+                clientClassPrinter.printIndentedLn(
+                    `${grpcMethodName}(` +
+                    `request: ${requestMessageTypeName}` +
                     `): GRPC.ClientReadableStream<${responseMessageTypeName}>;`);
             } else if (isClientStreaming && !isServerStreaming) {
                 // Client streaming
@@ -100,11 +124,22 @@ export function printFileDescriptorTSGRPC(fileDescriptor: FileDescriptorProto, e
                 methodImplsPrinter.printIndentedLn(`${grpcMethodName}: MethodImplTypes.${grpcMethodName};`);
                 clientClassPrinter.printIndentedLn(
                     `${grpcMethodName}(` +
+                    `metadata: GRPC.Metadata, ` +
+                    `options: Partial<GRPC.CallOptions>, ` +
                     `callback: GRPC.requestCallback<${responseMessageTypeName}>` +
                     `): GRPC.ClientWritableStream<${requestMessageTypeName}>;`);
                 clientClassPrinter.printIndentedLn(
                     `${grpcMethodName}(` +
                     `options: Partial<GRPC.CallOptions>, ` +
+                    `callback: GRPC.requestCallback<${responseMessageTypeName}>` +
+                    `): GRPC.ClientWritableStream<${requestMessageTypeName}>;`);
+                clientClassPrinter.printIndentedLn(
+                    `${grpcMethodName}(` +
+                    `metadata: GRPC.Metadata, ` +
+                    `callback: GRPC.requestCallback<${responseMessageTypeName}>` +
+                    `): GRPC.ClientWritableStream<${requestMessageTypeName}>;`);
+                clientClassPrinter.printIndentedLn(
+                    `${grpcMethodName}(` +
                     `callback: GRPC.requestCallback<${responseMessageTypeName}>` +
                     `): GRPC.ClientWritableStream<${requestMessageTypeName}>;`);
             } else {
@@ -113,7 +148,16 @@ export function printFileDescriptorTSGRPC(fileDescriptor: FileDescriptorProto, e
                 methodImplsPrinter.printIndentedLn(`${grpcMethodName}: MethodImplTypes.${grpcMethodName};`);
                 clientClassPrinter.printIndentedLn(
                     `${grpcMethodName}(` +
+                    `metadata: GRPC.Metadata, ` +
                     `options: Partial<GRPC.CallOptions>` +
+                    `): GRPC.ClientDuplexStream<${requestMessageTypeName}, ${responseMessageTypeName}>;`);
+                clientClassPrinter.printIndentedLn(
+                    `${grpcMethodName}(` +
+                    `options: Partial<GRPC.CallOptions>` +
+                    `): GRPC.ClientDuplexStream<${requestMessageTypeName}, ${responseMessageTypeName}>;`);
+                clientClassPrinter.printIndentedLn(
+                    `${grpcMethodName}(` +
+                    `metadata: GRPC.Metadata` +
                     `): GRPC.ClientDuplexStream<${requestMessageTypeName}, ${responseMessageTypeName}>;`);
                 clientClassPrinter.printIndentedLn(
                     `${grpcMethodName}(): GRPC.ClientDuplexStream<${requestMessageTypeName}, ${responseMessageTypeName}>;`);
@@ -128,16 +172,14 @@ export function printFileDescriptorTSGRPC(fileDescriptor: FileDescriptorProto, e
         clientClassPrinter.printLn(`}`);
         servicePrinter.printLn(`}`);
 
+        printer.print(clientClassPrinter.output);
+        printer.printLn("");
+
         printer.print(methodImplTypesPrinter.output);
         printer.print(methodImplsPrinter.output);
-
-        printer.printLn("");
-        printer.print(clientClassPrinter.output);
         printer.print(servicePrinter.output);
 
         printer.printLn("");
-        printer.printIndentedLn(`const ${service.getName()}Service: ${serviceInterfaceName};`);
-        printer.printIndentedLn(`const ${service.getName()}Client: typeof ${clientClassName};`);
         printer.printLn(`}`);
     });
 
