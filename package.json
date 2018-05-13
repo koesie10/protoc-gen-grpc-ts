@@ -1,5 +1,5 @@
 {
-  "name": "protoc-gen-grpc-ts",
+  "name": "ts-grpc-protoc-gen",
   "version": "0.1.0",
   "description": "Protoc Plugin for TypeScript Declarations for gRPC",
   "scripts": {
@@ -13,7 +13,7 @@
   "bin": {
     "protoc-gen-grpc-ts": "bin/protoc-gen-grpc-ts"
   },
-  "repository": "https://github.com/koesie10/protoc-gen-grpc-ts",
+  "repository": "https://github.com/koesie10/ts-grpc-protoc-gen",
   "keywords": [
     "protobuf",
     "protoc",
