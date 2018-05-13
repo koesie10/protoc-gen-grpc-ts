@@ -1,6 +1,6 @@
 {
-  "name": "ts-grpc-protoc-gen",
-  "version": "0.1.1",
+  "name": "grpc-ts-protoc-gen",
+  "version": "0.1.0",
   "description": "Protoc Plugin for TypeScript Declarations for gRPC",
   "scripts": {
     "lint": "tslint src/**/*.ts && (cd test && npm run lint)",

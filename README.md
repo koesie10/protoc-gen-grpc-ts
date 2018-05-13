@@ -9,7 +9,7 @@ This plugin is tested and written using TypeScript 2.7.
 
 ## Installation
 * Install the standard C++ implementation of protocol buffers from [developers.google.com/protocol-buffers](https://developers.google.com/protocol-buffers)
-* Install this package using npm, eg: `npm install ts-grpc-protoc-gen` or clone, install and build this repository.
+* Install this package using npm, eg: `npm install grpc-ts-protoc-gen` or clone, install and build this repository.
 
 ## Usage
 As mention above, this plugin for `protoc` serves two purposes:
